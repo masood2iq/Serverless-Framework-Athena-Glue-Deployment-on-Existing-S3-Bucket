@@ -102,8 +102,12 @@ vim serverless.yml
 OR
 nano serverless.yml
 
+As you can see serverless defines the service with our project name, selecting AWS provider, where we are defining our profile which we created at the time of credentials configuration, and defining the environment with the AWS region where we want to deploy resources.
 
-As you can see serverless define the service with our project name, selecting AWS provider, where we are defining our profile which we created at the time of credentials configuration and defining environment with AWS region where we want to deploy resources.
+We are also defining the custom resources of already existing S3 buckets with their paths which we are using in the glue crawler and Athena workgroup.
+
+Finally, we are creating a simple SQL query with Athena workgroup where we are providing a glue database with a glue table created by a glue crawler with an S3 bucket data directory name.
+
 
 ## Step - 5
 Now we need to deploy our project through command
