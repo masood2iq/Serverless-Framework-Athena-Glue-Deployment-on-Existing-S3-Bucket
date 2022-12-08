@@ -89,7 +89,7 @@ Use the credentials of the user you created in first step
 ## Step - 3
 Now we have to create our first project to deploy our resources on AWS for that we can do it by two ways as  
 
-#### **Way - 1**
+**Way** **-** **1**
 Create a project directory with command  
 
 ```
