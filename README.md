@@ -89,7 +89,7 @@ Use the credentials of the user you created in first step
 ## Step - 3
 Now we have to create our first project to deploy our resources on AWS for that we can do it by two ways as  
 
-**Way** **-** **1**
+### Way - 1  
 Create a project directory with command  
 
 ```
@@ -113,7 +113,7 @@ Command will create three files in your project directory in which serverless.ym
 
 ![](./images/image14.png)  
 
-#### Way - 2
+### Way - 2  
 Run the following command directly create your project with directory and all files as  
 
 ```
