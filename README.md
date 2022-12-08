@@ -1,7 +1,7 @@
-# Serverless_Glue_Athena_With_Existing_S3
+# Serverless_Framework_Athena_Glue_Deployment_on_existing_S3_Bucket
 
 ## Description
-Serverless (sls) deployment of Glue, Athena, and Simple Query on already existing S3 Bucket from Scratch
+AWS Athena, Glue Database, Glue Crawler deployment on existing S3 bucket through Serverless (sls) Framework.
 
 ## Overview
 Serverless is a cloud-native development model that allows developers to build and run applications without having to manage servers. There are still servers in serverless, but they are abstracted away from app development.
