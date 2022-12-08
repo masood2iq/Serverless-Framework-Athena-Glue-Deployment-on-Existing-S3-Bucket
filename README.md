@@ -79,7 +79,7 @@ $ npm install -g serverless
 To setup Serverless with AWS run the following command  
 
 ```
-$serverless config credentials --provider aws --key your-account-key --secret your-account-secret --profile ServerlessUser
+$ serverless config credentials --provider aws --key your-account-key --secret your-account-secret --profile ServerlessUser
 ```  
 
 ![](./images/image21.png)  
@@ -89,11 +89,11 @@ Use the credentials of the user you created in first step
 ## Step - 3
 Now we have to create our first project to deploy our resources on AWS for that we can do it by two ways as  
 
-#### Way - 1
+<u>#### **_Way - 1</u>
 Create a project directory with command  
 
 ```
-$mkdir athena-project
+$ mkdir athena-project
 ```  
 ![](./images/image12.png)  
 
