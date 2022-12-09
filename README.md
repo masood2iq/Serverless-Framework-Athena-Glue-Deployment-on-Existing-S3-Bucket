@@ -479,7 +479,7 @@ We are also defining the custom resources of already existing S3 buckets with th
 Finally, we are creating a simple SQL query with Athena workgroup where we are providing a glue database with a glue table created by a glue crawler with an S3 bucket data directory name in last.
 
 ```diff
-+ SELECT * FROM "database-${self:provider.stage}"."table-${self:provider.stage}raw_data"
+SELECT * FROM "database-${self:provider.stage}"."table-${self:provider.stage}raw_data"
 ```
 
 ## Step - 5
