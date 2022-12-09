@@ -284,7 +284,7 @@ $ nano serverless.yml
 #
 # Happy Coding!
 
-service: athena-project
+service: ${self:custom.product}-${self:provider.stage}
 
 #useDotenv: true
 
@@ -300,16 +300,21 @@ custom:
   DataS3BucketName: data-athena-016436653652                            # Unique name of your S3 bucket
   DataS3BucketPath: s3://data-athena-016436653652/raw_data/             # Path of data directory of your S3 bucket
   OutputS3BucketPath: s3://data-athena-016436653652/athena-output/      # Path of Athena query output data directory of your S3 bucket
+  product: serverless
+  bucket: s3
+  database: gluedb
+  crawler: gluecrwlr
+  workgroup: athenawg
+  query: athenaqry
 
 # you can overwrite defaults here
 provider:
   name: aws
-  runtime: nodejs12.x
-  profile: ServerlessUser
-  stage: dev                                                  # development, stagging, testing, production
-  region: us-east-1                                           # change to your region as required
-#  stackTags:
-#    Env: ${{self:provider.stage}}
+  region: ${opt:region, 'us-east-1'}                        # change to your region as required
+  stage: ${opt:stage, 'staging'}                            # development, stagging, testing, production
+  profile: ${opt:aws-profile, 'ServerlessUser'}
+  stackTags:
+    Env: ${self:provider.stage}
 
 # Resources section defines metadata for the Resources.
 # Create IAM Role assumed by the crawler. For demonstration, this role is given all related permissions.
@@ -374,8 +379,8 @@ resources:
       Properties:
         CatalogId: !Ref AWS::AccountId
         DatabaseInput:
-          Name: !Sub database-${self:provider.stage}
-          Description: !Sub database-${self:provider.stage}
+          Name: database-${self:custom.component}-${self:custom.database}-${self:custom.stage}
+          Description: database-${self:custom.component}-${self:custom.database}-${self:custom.stage}
 
 # Create a crawler to crawl the data on a Raw Data S3 bucket.
     AWSGlueCrawler:
@@ -384,8 +389,8 @@ resources:
         - AWSGlueDatabase
       Type: AWS::Glue::Crawler
       Properties:
-        Name: !Sub Crawler-${self:provider.stage}
-        Description: !Sub Crawler-${self:provider.stage}
+        Name: crawler-${self:custom.component}-${self:custom.crawler}-${self:custom.stage}
+        Description: crawler-${self:custom.component}-${self:custom.crawler}-${self:custom.stage}
         Role:
           Fn::GetAtt: [ AWSAthenaGlueRole, Arn ]
         Schedule:
@@ -394,14 +399,14 @@ resources:
         DatabaseName: !Ref AWSGlueDatabase
         Targets:
           S3Targets:
-            - Path: ${self:custom.DataS3BucketPath}                 # S3 Bucket data directory path
+            - Path: ${self:custom.DataS3BucketPath}                # S3 Raw Bucket
               Exclusions:
                 - "**.wav"
                 - "**.webm"
                 - "**.zip"
                 - "**.opus"
                 - "**.txt"
-        TablePrefix: !Sub table-${self:provider.stage}
+        TablePrefix: !Sub table-${self:custom.component}-${self:custom.crawler}-${self:provider.stage}
         SchemaChangePolicy:
           UpdateBehavior: "UPDATE_IN_DATABASE"
           DeleteBehavior: "LOG"
@@ -418,8 +423,8 @@ resources:
     AWSAthenaWorkGroup:
       Type: AWS::Athena::WorkGroup
       Properties:
-        Name: !Sub workgroup-${self:provider.stage}
-        Description: !Sub workgroup-${self:provider.stage}
+        Name: workgroup-${self:custom.component}-${self:custom.workgroup}-${self:custom.stage}
+        Description: workgroup-${self:custom.component}-${self:custom.workgroup}-${self:custom.stage}
         State: ENABLED
         RecursiveDeleteOption: true
         WorkGroupConfiguration:
@@ -439,8 +444,8 @@ resources:
         - AWSGlueDatabase
       Type: AWS::Athena::NamedQuery
       Properties:
-        Name: !Sub query-${self:provider.stage}
-        Description: !Sub query-${self:provider.stage}
+        Name: query-${self:custom.component}-${self:custom.query}-${self:custom.stage}
+        Description: query-${self:custom.component}-${self:custom.query}-${self:custom.stage}
         Database: !Ref AWSGlueDatabase
         QueryString: >
                       SELECT * FROM "database-${self:provider.stage}"."table-${self:provider.stage}raw_data"
@@ -471,7 +476,11 @@ As you can see serverless defines the service with our project name, selecting A
 
 We are also defining the custom resources of already existing S3 buckets with their paths which we are using in the glue crawler and Athena workgroup.  
 
-Finally, we are creating a simple SQL query with Athena workgroup where we are providing a glue database with a glue table created by a glue crawler with an S3 bucket data directory name.  
+Finally, we are creating a simple SQL query with Athena workgroup where we are providing a glue database with a glue table created by a glue crawler with an S3 bucket data directory name in last.
+
+```
++ SELECT * FROM "database-${self:provider.stage}"."table-${self:provider.stage}**raw_data**"
+```
 
 ## Step - 5
 Now we need to deploy the project through command  
