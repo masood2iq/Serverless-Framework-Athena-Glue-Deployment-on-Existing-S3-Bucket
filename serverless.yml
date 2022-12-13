@@ -106,8 +106,8 @@ resources:
       Properties:
         CatalogId: !Ref AWS::AccountId
         DatabaseInput:
-          Name: database-${self:custom.component}-${self:custom.database}-${self:custom.stage}
-          Description: database-${self:custom.component}-${self:custom.database}-${self:custom.stage}
+          Name: database-${self:custom.product}-${self:custom.database}-${self:custom.stage}
+          Description: database-${self:custom.product}-${self:custom.database}-${self:custom.stage}
 
 # Create a crawler to crawl the data on a Raw Data S3 bucket.
     AWSGlueCrawler:
@@ -116,8 +116,8 @@ resources:
         - AWSGlueDatabase
       Type: AWS::Glue::Crawler
       Properties:
-        Name: crawler-${self:custom.component}-${self:custom.crawler}-${self:custom.stage}
-        Description: crawler-${self:custom.component}-${self:custom.crawler}-${self:custom.stage}
+        Name: crawler-${self:custom.product}-${self:custom.crawler}-${self:custom.stage}
+        Description: crawler-${self:custom.product}-${self:custom.crawler}-${self:custom.stage}
         Role:
           Fn::GetAtt: [ AWSAthenaGlueRole, Arn ]
         Schedule:
@@ -133,7 +133,7 @@ resources:
                 - "**.zip"
                 - "**.opus"
                 - "**.txt"
-        TablePrefix: !Sub table-${self:custom.component}-${self:custom.crawler}-${self:provider.stage}
+        TablePrefix: !Sub table-${self:custom.product}-${self:custom.crawler}-${self:provider.stage}
         SchemaChangePolicy:
           UpdateBehavior: "UPDATE_IN_DATABASE"
           DeleteBehavior: "LOG"
@@ -150,8 +150,8 @@ resources:
     AWSAthenaWorkGroup:
       Type: AWS::Athena::WorkGroup
       Properties:
-        Name: workgroup-${self:custom.component}-${self:custom.workgroup}-${self:custom.stage}
-        Description: workgroup-${self:custom.component}-${self:custom.workgroup}-${self:custom.stage}
+        Name: workgroup-${self:custom.product}-${self:custom.workgroup}-${self:custom.stage}
+        Description: workgroup-${self:custom.product}-${self:custom.workgroup}-${self:custom.stage}
         State: ENABLED
         RecursiveDeleteOption: true
         WorkGroupConfiguration:
@@ -171,8 +171,8 @@ resources:
         - AWSGlueDatabase
       Type: AWS::Athena::NamedQuery
       Properties:
-        Name: query-${self:custom.component}-${self:custom.query}-${self:custom.stage}
-        Description: query-${self:custom.component}-${self:custom.query}-${self:custom.stage}
+        Name: query-${self:custom.product}-${self:custom.query}-${self:custom.stage}
+        Description: query-${self:custom.product}-${self:custom.query}-${self:custom.stage}
         Database: !Ref AWSGlueDatabase
         QueryString: >
                       SELECT * FROM "database-${self:provider.stage}"."table-${self:provider.stage}raw_data"
@@ -197,3 +197,4 @@ resources:
       Value: !Ref SampleQueryDate
       Export:
         Name: !Sub "SampleQueryDate-name"
+        
